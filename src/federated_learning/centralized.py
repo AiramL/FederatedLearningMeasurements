@@ -29,9 +29,6 @@ x_train, y_train, x_test, y_test = load_data_federated_IID("CIFAR-10",
                                                             trPer)
 
 
-print(len(x_train))
-print(y_train)
-
 # Defining the deep learning model
 if MODEL == "MOBILENET":
     model = tf.keras.applications.MobileNet((32, 32, 3), 
@@ -52,8 +49,11 @@ model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
               loss='sparse_categorical_crossentropy',
               metrics=['sparse_categorical_accuracy'])
 
+callback = tf.keras.callbacks.EarlyStopping(monitor='loss',
+                                         patience=3)
 
-model.fit(x_train,y_train,epochs=100,batch_size=32)
+
+model.fit(x_train,y_train,epochs=50,batch_size=32, callbacks=[callback])
     
 model.evaluate(x_test,y_test)
     
